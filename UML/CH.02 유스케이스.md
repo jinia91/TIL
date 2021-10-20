@@ -15,5 +15,75 @@
 <h3 id="유스케이스-다이어그램">유스케이스 다이어그램</h3>
 <p>동적(행위) 다이어그램으로 시스템내의활동들의 흐름을 보여줌</p>
 <p>여러 업무 프로세스를 설명하는데 자주 활용</p>
-<pre class=" language-mermaid"><svg id="mermaid-svg-XUJOmBJkfyg23xJL" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="170.1458282470703" style="max-width: 73.47917175292969px;" viewBox="0.0000019073486328125 0.0000019073486328125 73.47917175292969 170.1458282470703"><style>#mermaid-svg-XUJOmBJkfyg23xJL{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}#mermaid-svg-XUJOmBJkfyg23xJL .error-icon{fill:#552222;}#mermaid-svg-XUJOmBJkfyg23xJL .error-text{fill:#552222;stroke:#552222;}#mermaid-svg-XUJOmBJkfyg23xJL .edge-thickness-normal{stroke-width:2px;}#mermaid-svg-XUJOmBJkfyg23xJL .edge-thickness-thick{stroke-width:3.5px;}#mermaid-svg-XUJOmBJkfyg23xJL .edge-pattern-solid{stroke-dasharray:0;}#mermaid-svg-XUJOmBJkfyg23xJL .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-svg-XUJOmBJkfyg23xJL .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-svg-XUJOmBJkfyg23xJL .marker{fill:#666;stroke:#666;}#mermaid-svg-XUJOmBJkfyg23xJL .marker.cross{stroke:#666;}#mermaid-svg-XUJOmBJkfyg23xJL svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-svg-XUJOmBJkfyg23xJL .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#000000;}#mermaid-svg-XUJOmBJkfyg23xJL .cluster-label text{fill:#333;}#mermaid-svg-XUJOmBJkfyg23xJL .cluster-label span{color:#333;}#mermaid-svg-XUJOmBJkfyg23xJL .label text,#mermaid-svg-XUJOmBJkfyg23xJL span{fill:#000000;color:#000000;}#mermaid-svg-XUJOmBJkfyg23xJL .node rect,#mermaid-svg-XUJOmBJkfyg23xJL .node circle,#mermaid-svg-XUJOmBJkfyg23xJL .node ellipse,#mermaid-svg-XUJOmBJkfyg23xJL .node polygon,#mermaid-svg-XUJOmBJkfyg23xJL .node path{fill:#eee;stroke:#999;stroke-width:1px;}#mermaid-svg-XUJOmBJkfyg23xJL .node .label{text-align:center;}#mermaid-svg-XUJOmBJkfyg23xJL .node.clickable{cursor:pointer;}#mermaid-svg-XUJOmBJkfyg23xJL .arrowheadPath{fill:#333333;}#mermaid-svg-XUJOmBJkfyg23xJL .edgePath .path{stroke:#666;stroke-width:1.5px;}#mermaid-svg-XUJOmBJkfyg23xJL .flowchart-link{stroke:#666;fill:none;}#mermaid-svg-XUJOmBJkfyg23xJL .edgeLabel{background-color:white;text-align:center;}#mermaid-svg-XUJOmBJkfyg23xJL .edgeLabel rect{opacity:0.5;background-color:white;fill:white;}#mermaid-svg-XUJOmBJkfyg23xJL .cluster rect{fill:hsl(210,66.6666666667%,95%);stroke:#26a;stroke-width:1px;}#mermaid-svg-XUJOmBJkfyg23xJL .cluster text{fill:#333;}#mermaid-svg-XUJOmBJkfyg23xJL .cluster span{color:#333;}#mermaid-svg-XUJOmBJkfyg23xJL div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(-160,0%,93.3333333333%);border:1px solid #26a;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-svg-XUJOmBJkfyg23xJL:root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}#mermaid-svg-XUJOmBJkfyg23xJL flowchart{fill:apa;}</style><g><g class="output"><g class="clusters"></g><g class="edgePaths"><g class="edgePath LS-id1 LE-b" id="L-id1-b" style="opacity: 1;"><path class="path" d="M36.73958396911621,65.47916793823242L36.73958396911621,90.47916793823242L36.73958396911621,115.47916793823242" marker-end="url(https://stackedit.io/app#arrowhead37)" style="fill:none"></path><defs><marker id="arrowhead37" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowheadPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker></defs></g></g><g class="edgeLabels"><g class="edgeLabel" transform="" style="opacity: 1;"><g transform="translate(0,0)" class="label"><rect rx="0" ry="0" width="0" height="0"></rect><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span id="L-L-id1-b" class="edgeLabel L-LS-id1' L-LE-b"></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-id1-146" transform="translate(36.73958396911621,36.73958396911621)" style="opacity: 1;"><circle x="-28.73958396911621" y="-23.33333396911621" r="28.73958396911621" class="label-container"></circle><g class="label" transform="translate(0,0)"><g transform="translate(-18.73958396911621,-13.333333969116211)"><foreignObject width="37.47916793823242" height="26.666667938232422"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">actor</div></foreignObject></g></g></g><g class="node default" id="flowchart-b-147" transform="translate(36.73958396911621,138.81250190734863)" style="opacity: 1;"><rect rx="0" ry="0" x="-14.458333492279053" y="-23.33333396911621" width="28.916666984558105" height="46.66666793823242" class="label-container"></rect><g class="label" transform="translate(0,0)"><g transform="translate(-4.458333492279053,-13.333333969116211)"><foreignObject width="8.916666984558105" height="26.666667938232422"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;">b</div></foreignObject></g></g></g></g></g></g></svg></pre>
+<h4 id="구성요소">구성요소</h4>
+<ul>
+<li>
+<p>ACTOR : 시스템과 상호작용하는 외부존재(사용자가될수도, 시스템이 될수도있음 다양함)</p>
+</li>
+<li>
+<p>SYSTEM : 네모로 표현</p>
+</li>
+<li>
+<p>USECASE : 시스템에서 제공하는 기능으로 동그라미로 표현</p>
+</li>
+</ul>
+<p><img src="https://github.com/jinia91/blogTest/blob/main/img/UseCaseDiagram1.png?raw=true" alt="enter image description here"></p>
+<h4 id="관계의-종류">관계의 종류</h4>
+<ul>
+<li>
+<p>연관관계</p>
+<ul>
+<li>활성화 : actor -&gt; 유스케이스<br>
+액터가 유스케이스를 활성화시킴</li>
+<li>수행결과 통보 : 유스케이스 -&gt; actor<br>
+유스케이스가  액터에게 통보 또는 외부 시스템에 서비스실행 요청</li>
+</ul>
+</li>
+<li>
+<p>포함관계(한 유스케이스가 다른 유스케이스 기능을 포함, 반드시 해야하는 관계!)&lt;&lt;include&gt;&gt;</p>
+<ul>
+<li>
+<p>ex) 출퇴근 관리 기능 업무 기술서 유스케이스 작성시</p>
+<ul>
+<li>로그인 기능</li>
+<li>출근시간 기록 기능</li>
+<li>두개의 유스케이스는 로그인 -&gt; 출근시간기록 순서로 반드시 실행되므로 &lt;&lt;include&gt;&gt; 관계(포함관계)라고 말할수 있음</li>
+</ul>
+</li>
+<li>
+<p>표기법 : 출근시간 기록 --&lt;&lt;include&gt;&gt; --&gt; 로그인</p>
+</li>
+<li>
+<p>포함유스케이스를 사용하는 이유는 유스케이스의 재사용목적, 필수라고 명시해놨으므로 다른 유스케이스에서 로그인 기능을 표시할때 포함관계 기능들이 실행될것임을 짐작할 수 있음</p>
+</li>
+</ul>
+</li>
+<li>
+<p>확장관계(기본 유스케이스에서 특정 조건이나 액터의 선택에 따라 발생하는 유스케이스, 기능이 실행될수도 있다! 반드시는아님)&lt;&lt;extend&gt;&gt;</p>
+<ul>
+<li>
+<p>ex) 게시판 등록 기능과 파일 업로드 기능</p>
+</li>
+<li>
+<p>표기법 : 게시판 등록&lt;— &lt;&lt;extend&gt;&gt; ---- 파일 업로드<br>
+포함관계랑은 방향이 다름! 주의!</p>
+</li>
+</ul>
+</li>
+<li>
+<p>일반화 관계(상속관계라 보면 편함)</p>
+<ul>
+<li>ex) 게시물 검색 &lt;- 제목검색/내용검색<br>
+추상화기능과 상세 기능</li>
+</ul>
+</li>
+</ul>
+<h4 id="유스케이스-다이어그램-작업-과정">유스케이스 다이어그램 작업 과정</h4>
+<ol>
+<li>액터 식별</li>
+<li>유스케이스 식별(사용하려는 기능 도출)</li>
+<li>도출한액터, 유스케이스 무작위 단순 배치</li>
+<li>중복의미의 유스케이스 제거, 불필요한 유스케이스 제거, 그루핑</li>
+<li>관계설정</li>
+</ol>
 
