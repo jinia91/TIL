@@ -86,4 +86,6 @@
 <li>중복의미의 유스케이스 제거, 불필요한 유스케이스 제거, 그루핑</li>
 <li>관계설정</li>
 </ol>
+<h3 id="커머스-쇼핑몰-유스케이스-실습">커머스 쇼핑몰 유스케이스 실습</h3>
+<p><img src="https://github.com/jinia91/blogTest/blob/main/img/%EC%A4%91%EA%B3%A0%EB%82%98%EB%9D%BC.png?raw=true" alt="enter image description here"></p>
 
