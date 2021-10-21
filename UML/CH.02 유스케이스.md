@@ -88,4 +88,11 @@
 </ol>
 <h3 id="커머스-쇼핑몰-유스케이스-실습">커머스 쇼핑몰 유스케이스 실습</h3>
 <p><img src="https://github.com/jinia91/blogTest/blob/main/img/%EC%A4%91%EA%B3%A0%EB%82%98%EB%9D%BC.png?raw=true" alt="enter image description here"></p>
+<h3 id="유스케이스-작성시-유의사항">유스케이스 작성시 유의사항</h3>
+<ul>
+<li>유스케이스간에는 실선연결 하면 안됨<br>
+실선은 연관관계를 의미하며 연관관계는 액터와 유스케이스간에만 성립</li>
+<li>유스케이스간의 관계가 지나치게 복잡할경우 합의를 통해 간략화도 가능(uml의 정답은 없고 어디까지나 의사소통 도구임을 인지하자)</li>
+</ul>
+<h3 id="실습-2">실습 2<img src="https://github.com/jinia91/blogTest/blob/main/img/%EC%87%BC%ED%95%91%EB%AA%B0.png?raw=true" alt="enter image description here"></h3>
 
