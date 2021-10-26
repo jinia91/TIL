@@ -48,4 +48,163 @@
 일대다 조인테이블 다대일로 관계를 맺으며 조인테이블을 조인 객체로 승격시켜서 도메인단위에서 관리하도록 하자</p>
 <p>이때 조인테이블의 PK는 전통적인 방식인 양방향 FK -&gt; 슈퍼키로 만들기보단<br>
 그냥 비지니스랑 의미없는 UID를 주는것이 더 바람직함(설계의 유연성때문)</p>
+<h3 id="상속관계-매핑inheritance">상속관계 매핑(Inheritance)</h3>
+<ul>
+<li>
+<p>관계형 데이터베이스는 상속관계X</p>
+</li>
+<li>
+<p>슈퍼타입 서브타입 관계라는 모델링 기법이 객체 상속과 유사</p>
+</li>
+<li>
+<p>상속관계매핑 : 객체의 상속 구조와, DB의 슈퍼타입 서브타입관계를 매핑</p>
+</li>
+<li>
+<p>실제 디비에서 구현전략</p>
+<ul>
+<li>JOINED 조인(DTYPE 추가 가능)</li>
+<li>SINGLE_TABLE 단일테이블(DTYPE으로 구분)</li>
+<li>TABLE_PER_CLASS 개별테이블</li>
+<li>DTYPE은 추가하는게 좋음</li>
+</ul>
+</li>
+<li>
+<p>장단점</p>
+<p>Join전략 : 정규화되어있음, 관계형 디비에 충실, 저장공간 효율화 but 조회할때 조인이 많이 사용하다보니 성능과 테이블의 복잡성 but join이 정석!</p>
+<p>단일테이블 전략 : 쿼리가 단순, 테이블관리가 쉬움 / null 허용하는 단점, 무결성입장에서 애매하고 성능이 일반적으론 빠르지만 나쁠수도 …?</p>
+<p>Table_Per_Class의 경우 조회시 모든 테이블을 유니온해서 다 뒤지므로 비효율적 개별 테이블은 걍 쓰지마!!</p>
+</li>
+</ul>
+<h3 id="mappedsuperclass">MappedSuperclass</h3>
+<ul>
+<li>
+<p>상속관계 매핑x</p>
+</li>
+<li>
+<p>엔티티x, 테이블과 매핑x</p>
+</li>
+<li>
+<p>부모클래스 상속받는 자식클래스에 매핑정보만 제공</p>
+</li>
+<li>
+<p>조회, 검색불가! 상속이 아니다!</p>
+</li>
+<li>
+<p>추상클래스로 만들기</p>
+</li>
+<li>
+<p>테이블과 상관없고 단순히 entity 가 공통으로 사용하는 매핑 정보를 모으는 역할</p>
+</li>
+<li>
+<p>주로 등록일, 수정일, 등록자, 수정자같은 전체 엔티티에서 공통으로 적용하는 정보를 모을 때 사용</p>
+</li>
+<li>
+<p>참고 : @Entity 클래스는 @Entity(진짜 상속)나 @MappedSuperclass 로 지정한 클래스만 상속가능</p>
+</li>
+<li>
+<p>BasicEntity 실무에서도 쓰자 !</p>
+</li>
+</ul>
+<h2 id="프록시">프록시</h2>
+<p>기본 제공 api중 find()와 get()이 다른 역할<br>
+find는 실제 조회지만 get은 프록시 엔티티를 조회<br>
+사실상 영속성 컨텍스트에 프록시 객체를 만든뒤 실제 조회되는 시점에서 쿼리를 보내는 방법</p>
+<h3 id="특징">특징</h3>
+<ul>
+<li>프록시 객체는 처음 사용할때 한번만 초기화</li>
+<li>프록시 객체가 실제 객체로 바뀌는게 아닌 프록시 내부의 커서가 실제 객체를 가르키는거임</li>
+<li>따라서 타입체크시에 ==을 하게되면 다른 클래스로 판정됨!! 상속받은 자식객체임 따라서 instanceOf를 써야된다</li>
+<li>영속성컨텍스트에 이미 찾는 객체가있다면 get을 써도 실제 객체로 반환 프록시x</li>
+<li>
+<blockquote>
+<p>영속성 컨텍스트안에서 한번 캐싱된 객체는 동일 조회에 대해 항상 동일성을 유지해야하기때문</p>
+</blockquote>
+</li>
+<li>이에 대한 응용으로 프록시 객체를 조회후, find로 동일객체를 다시 조회한다면 두 변수는 같은 프록시 객체를 지목하고 해당 프록시객체의 커서가 실제 find로 조회된 객체를 지목하는 방식으로 됨 즉 프록시객체의 껍데기는 유지!</li>
+</ul>
+<blockquote>
+<p>핵심은 서비스로직에서 프록시가 나오든 실제 객체가 나오든 문제가 안생기도록 로직을 짜는것!</p>
+</blockquote>
+<ul>
+<li>프록시객체가 실제객체를 찾기 이전에 트랜잭션이 끝나버리는경우 프록시 객체는 실제 객체조회가 불가능<br>
+(org.hibernate.LazyInitializationException)</li>
+</ul>
+<h2 id="지연-로딩fetchtype-lazy">지연 로딩(FetchType =LAZY)</h2>
+<ul>
+<li>객체 조회시 참조하는 객체가 있으면 참조 객체는 Proxy객체를 만들어 삽입한채로 조회됨</li>
+<li>이후 참조객체를 찾을경우 Proxy의 커서로 쿼리가 날라가 조회</li>
+</ul>
+<h3 id="반대는-즉시로딩fetchtypeeager">반대는 즉시로딩(FetchType=EAGER)</h3>
+<h3 id="but-실무에선-즉시로딩-쓰면-안됨">but 실무에선 즉시로딩 쓰면 안됨!!!</h3>
+<blockquote>
+<p>테이블이 5개 6개 걸리면 그게 다 매번 조인될경우 성능에 지장 문제는 Default값이 즉시로딩… 즉 모든 매핑상황에서 참조부분에 lazy로 발라넣어야한다…</p>
+</blockquote>
+<h3 id="또한-jpql에서-n1-문제발생">또한 JPQL에서 N+1 문제발생!</h3>
+<blockquote>
+<p>JPQL은 조인전략으로 조인되서 나가는방식과는 달리 쌩 SQL문으로 번역되서 나가므로 SQL 쿼리가 한번 날라가고 거기에 JPA상으로 참조된 다른 테이블 N개에 대해 추가 쿼리가 N개 더 날라가는 문제</p>
+</blockquote>
+<h3 id="다-lazy로-발라라">다!!! LAZY로 발라라!</h3>
+<h2 id="jpa-cascade">JPA CASCADE</h2>
+<blockquote>
+<p>일대다 매핑상황에서 Insert를 날릴때 하나의 객체를 저장하려면 참조하는(되는) 객체도 지정하거나 새로 만들어서 저장하는게 당연<br>
+이때 만약 새로운 객체를 전부 만든상황이라면 각각에 persist를 날려야함<br>
+이때 참조되는 객체들도 한번에 Insert해주는 기능</p>
+</blockquote>
+<p>ex)<br>
+@OneToMany(cascade = CascadeType.ALL)</p>
+<p>연관관계나 RDB개념이랑은 상관없고 그냥 Cascade 설정이 들어간 멤버변수들에 대해서도 영속성 관리를 해주는 개념</p>
+<ul>
+<li>ALL, PERSIST 정도만 사용<br>
+사실상 집합관계일때 사용</li>
+</ul>
+<h2 id="고아객체">고아객체</h2>
+<p>위의 CASCADE에서 부모객체와의 연관성이 사라졌을때 자식객체를 의미<br>
+orpanRemoval = true;<br>
+고아객체 삭제</p>
+<p>=&gt; DDD의 개념중 집합관계 Root만 DAO가 관리하고 이하 자식들은 부모를 통해 생명주기를 관리하는 것과 일맥상통</p>
+<h2 id="jpa가-인식하는-값-타입">JPA가 인식하는 값 타입</h2>
+<ol>
+<li>ENTITY</li>
+<li>기본값타입
+<ul>
+<li>int, double, Integer, Long, String…</li>
+<li>Entity에 생명주기를 의존</li>
+</ul>
+</li>
+<li><strong>임베디드 타입(복합값타입)</strong>
+<ul>
+<li>두개이상을 묶어서 만들때</li>
+<li>쉽게말해 클래스를 따로 뽑아내는것</li>
+<li>이때 임베디드 타입은 부모 엔티티의 생명주기와 같이함</li>
+<li>중요한것은 따로 테이블을 만드는것이 아니라 싱글테이블로 들어감! 객체지향적으로 관리하는것일 뿐</li>
+<li>@Embeddable, @Embedded</li>
+<li>@AttributeOverride 속성 재정의를 통해 한 Entity에 동일 임베디드타입을 여러개도 넣을수 있음</li>
+<li>문제는 CallByReference로 참조하는거기때문에 안전하지않음</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>공유참조 문제를 해결하기 위해서 임베디드타입은 불변객체로 생성해야한다!!!<br>
+마치 String처럼 한번쓰고 버리는방식!<br>
+즉 임베디드타입으로 만드는 클래스는 Setter를 안만들면됨! 생성자로 생성되는 최초에만 작성가능</p>
+</blockquote>
+<blockquote>
+<p>값타입취급을 해줘야하기때문에 동등성비교를 위한 equals hashCode 오버라이딩 필수!</p>
+</blockquote>
+<ol start="4">
+<li><strong>컬렉션값타입</strong>
+<ul>
+<li>Entity를 컬렉션 x 값을 컬렉션으로 넣을때를 말하며</li>
+<li>RDB는 컬렉션을 담는방법이 테이블뿐이므로 사실상 일대다 매핑관계와 동일하게 구현</li>
+<li>단 이때 모든값을 묶어서 PK로 만들어서 엔티티랑 구분하며 값컬렉션 테이블의경우 Entity가 아니므로 스스로의 생명주기(CRUD)가 없이 부모 Entity에 종속(CascadeALL이 디폴트인셈)</li>
+<li>@ElementCollection<br>
+@CollectionTable(name = “”, JoinColumns = @JoinColumn(name=""))을 사용하여 컬렉션값 변수에 달아주기</li>
+<li>컬렉션들은 지연로딩이 디폴트</li>
+<li>값타입 컬렉션에 변경사항이 발생하면 해당 컬렉션을 모두 삭제후 다시 INSERT하는 쿼리가 날라감;; <strong>쓰지마!!!</strong></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>실무에서는 값타입컬렉션 쓰지말고 그냥 일대다 관계로쓰자</p>
+</blockquote>
 
