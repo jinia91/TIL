@@ -207,4 +207,249 @@ orpanRemoval = true;<br>
 <blockquote>
 <p>실무에서는 값타입컬렉션 쓰지말고 그냥 일대다 관계로쓰자</p>
 </blockquote>
+<h2 id="jpql-문법">JPQL 문법</h2>
+<h3 id="기본적으론-sql과-동일">기본적으론 SQL과 동일</h3>
+<ul>
+<li>SELECT M FROM Member AS M WHERE M.age&gt;18</li>
+<li>대소문자를 기본적으로 구분함!</li>
+<li>FROM 뒤에는 Entity 클래스 이름으로, Select에도 전체 조회시 객체 자체를 조회</li>
+<li><strong>별칭은 필수!</strong></li>
+</ul>
+<h3 id="typequery-query">TypeQuery, Query</h3>
+<pre><code>TypeQuery&lt;Member&gt; query = 
+em.createQuery("Select m From Member m", Member.class)
+Query = 
+em.createQuery("Select m.username, m.age From Member m", Member.class)
+</code></pre>
+<h3 id="쿼리안에-파라미터-사용할경우">쿼리안에 파라미터 사용할경우</h3>
+<pre><code>int userageParam = 13;
+createQuery(Select m from Member m where m.userage =:userage)
+.query.setParameter("userage", userageParam);
+</code></pre>
+<h3 id="결과조회-api">결과조회 API</h3>
+<ul>
+<li>query.getResultList(): 결과가 하나 이상일때 리스트 반환
+<ul>
+<li>결과가 없으면 빈리스트 반환</li>
+</ul>
+</li>
+<li>query.getSingleList(): 결과가 정확히 하나일경우
+<ul>
+<li>없거나 여러개면 에러 던짐</li>
+</ul>
+</li>
+<li>스칼라 프로젝션으로 여러값 조회할때
+<ul>
+<li>select m.username, m.age from Member m</li>
+<li>Query 타입으로 조회</li>
+<li>Object[] 타입으로 조회 List&lt;Object[]&gt; resultList</li>
+<li>new 명령어로 조회
+<ul>
+<li>단순값을 DTO로 바로조회하기</li>
+<li>Select new jpa.jpql.UserDTO(m.username, m.age) from Member m</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="페이징-api">페이징 API</h3>
+<ul>
+<li>query.setFirstResult(); 어디부터</li>
+<li>query.setMaxResult(); 어디까지</li>
+</ul>
+<h3 id="조인">조인</h3>
+<ul>
+<li>내부 / 외부 조인 일반 sql과 동일</li>
+<li>세타 조인, 크로스 조인
+<ul>
+<li>select count(m) from Member m, Team t where m.username = <a href="http://t.name">t.name</a></li>
+</ul>
+</li>
+<li>on으로 조인시 조건도 지정 가능
+<ul>
+<li>select from Member m join m.team t on <a href="http://t.name">t.name</a> =“A”<br>
+이런식으로 조건문을 on에 실어서 쿼리 보내는것도 가능</li>
+</ul>
+</li>
+</ul>
+<h3 id="서브-쿼리-함수">서브 쿼리 함수</h3>
+<ul>
+<li>exists all any some 으로 참, 거짓 반환</li>
+<li>SELECT M FROM Member M<br>
+WHERE EXIST(SELECT T FROM M.team T WHERE <a href="http://T.name">T.name</a> = ‘A’)<br>
+<strong>JPA 서브쿼리의 한계</strong> : FROM절에서 사용불가능! 조인으로 해결해야함</li>
+</ul>
+<h3 id="조건식">조건식</h3>
+<ul>
+<li>
+<p>기본 CASE</p>
+<pre><code>SELECT 
+		WHEN M.age &lt;= then '학생요금'
+		WHEN M.age &gt;= then '경로요금'
+		ELSE '일반요금'
+	END
+FROM Member M
+</code></pre>
+</li>
+<li>
+<p>단순 CASE</p>
+<pre><code>SELECT
+  	CASE T.name
+  		WHEN '팀A' THEN '인센티브110%'
+  		WHEN '팀B' THEN '인센티브120%'
+  		ELSE '인센티브 105%'
+  	END
+  FROM Team T		 
+</code></pre>
+</li>
+<li>
+<p>COALESCE : 하나씩 조회해서 NULL이 아닌것을 반환<br>
+SELECT COALESCE (m.username, ‘이름 없는 회원’) FROM Member m;<br>
+m.username확인하고 널이 없으면 그대로 m.username을 반환하지만 널이 있으면 넘어가서 ‘이름 없는 회원’ 을 조회, 리터럴이므로 null이 아니므로 해당 컬럼을 반환하게됨<br>
+COALESCE(A,B,C,D,0) 이런식일경우 A,B,C,D를 차례로 조회함</p>
+</li>
+<li>
+<p>NULLIF : 두 값이 같으면 NULL반환 , 다르면 첫번째 값 반환</p>
+</li>
+</ul>
+<h3 id="그외에-jpa-공통-지원-기본함수">그외에 JPA 공통 지원 기본함수</h3>
+<ul>
+<li>CONCAT</li>
+<li>SUBSTRING</li>
+<li>TRIM</li>
+<li>LOWER,UPPER</li>
+<li>LENGTH</li>
+<li>LOCATE</li>
+<li>ABS,SQRT,MOD</li>
+<li>SIZE, INDEX</li>
+<li>디비에 종속적인 함수도 다 지원하므로 크게 걱정은 안해도됨</li>
+</ul>
+<h3 id="경로-표현식">경로 표현식</h3>
+<ul>
+<li>. 점찍어서 객체 그래프를 타고 가는것</li>
+<li>이때 종류 3가지를 꼭 구분해서 알아두자
+<ul>
+<li>m.username 상태 필드를 탐색</li>
+<li>join m.team t  단일값으로 연결된 연관(의존) 필드 탐색
+<ul>
+<li>대상이 엔티티</li>
+</ul>
+</li>
+<li>join m.orders o 컬렉션으로 연결된 연관(의존) 필드 탐색
+<ul>
+<li>대상이 컬렉션</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>특징</strong>
+<ul>
+<li>상태 필드 : 경로 탐색의 끝, .못찍음 당연</li>
+<li>단일값 연관경로 : 묵시적 내부 조인 발생, 탐색 O, 탐색한 엔티티로 또 탐색 가능(. 찍고 또감)
+<ul>
+<li>묵시적 내부 조인은 실무에서 문제가 발생할 수 있음. 내가 원하는게 있다면 직접 조인쿼리를 짜서 하는게 맞다. 예상치못한 쿼리가 날라가서 문제발생 위험!</li>
+</ul>
+</li>
+<li>컬렉션값 연관경로 : 묵시적 내부조인 발생, 탐색 X
+<ul>
+<li>
+<p>묵시적 조인으론 탐색 불가능함  명시적 조인을해서 사용</p>
+<pre><code>SELECT t.members FROM Team t; (x)
+SELECT  m.username FROM Team t JOIN t.members m;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>그냥 실무에선 묵시적 조인사용하지말 것 명시적 조인쓰자</strong></p>
+<h2 id="페치-조인">페치 조인</h2>
+<ul>
+<li>SQL 조인종류 X</li>
+<li>JPQL 에서 성능 최적화를 위해 제공하는 기능</li>
+<li><strong>실무에서 매우중요!</strong></li>
+<li>연관 엔티티나 컬렉션을 SQL한번에 함께 조회하는 기능</li>
+<li>JOIN FETCH 명령어로 사용</li>
+</ul>
+<p>EX)<br>
+SELECT m FROM Member m JOIN FETCH m.team</p>
+<p>=&gt;SQL<br>
+SELECT m.* , t.*<br>
+FROM MEMBER m<br>
+INNER JOIN TEAM t ON (M.TEAM_ID = <a href="http://T.ID">T.ID</a>);</p>
+<p><strong>중요</strong></p>
+<blockquote>
+<p>조인된 테이블 전체에 대한 조회라고 보면 됨<br>
+만약 즉시로딩으로 멤버 테이블의 모든 구성원에 대한 팀들 조회하는 쿼리를 날린다면 멤버 테이블전체를 조회하는 쿼리 + 각 팀을 조회하는 (팀갯수)N개의 쿼리가 날라가는 N+1문제가 발생함!<br>
+지연로딩일지라도 최초 조회하는 멤버의 팀은 가져오지만, 이후 만나는 멤버가 다른팀일경우 해당팀만큼 쿼리가 날라가므로 결국 똑같은 N+1 문제를 직면하게 됨!<br>
+이를 해결하기 위해 꼭 <strong>FETCH JOIN</strong>을 사용해야한다</p>
+</blockquote>
+<ul>
+<li>1대 다 조인일경우(TEAM 테이블에서 MEMBER와 페치 조인해서 조회하는것)
+<ul>
+<li>TEAM이 중복되며 뻥튀기됨!</li>
+<li>문제는 이를 디비를 통해 조회해서 객체로 가져오면서 중복뻥튀기된 객체로 가져오게됨
+<ul>
+<li>(멤버3명, 팀2개인 테이블에서 팀으로 객체를 페치조인해서 조회하면 팀이 3개가 나옴!)</li>
+</ul>
+</li>
+<li>DISTINCT를 날리면 JPA차원에서 메인이 되는(여기서는 팀) 테이블의 PK의 무결성이 유지되게끔 중복성을 제거해줌
+<ul>
+<li>결국 조회시 팀이 2개가 나옴!</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="페치조인과-일반-조인의-차이">페치조인과 일반 조인의 차이</h3>
+<p>일반 조인은 연관된 엔티티의 컬럼을 지정한게 아닌이상 엔티티 자체를 영속성 컨텍스트로 가져오질 않음. 따라서 N+1 문제를 야기할 수 있음</p>
+<h3 id="페치-조인의-한계">페치 조인의 한계</h3>
+<ul>
+<li>
+<p>페치 조인 대상에 별칭 X 주지 말것 어차피 다 불러오려고 하는건데 왜 별칭을 줘? 그냥 다 끌고올것</p>
+</li>
+<li>
+<p>둘 이상의 컬렉션은 페치조인 X</p>
+</li>
+<li>
+<p>컬렉션을 페치조인하면 페이징 API 사용 불가능</p>
+<ul>
+<li>일대다의 경우 데이터가 뻥튀기되서 안됨</li>
+<li>@Batchsize 를 사용하면 해결 가능</li>
+</ul>
+</li>
+</ul>
+<p>=&gt; 실무에서는 모두 지연로딩, 최적화가 필요한곳은 페치조인을 하기</p>
+<h2 id="엔티티-직접사용">엔티티 직접사용</h2>
+<ul>
+<li>
+<p>JPQL에서 엔티티를 직접 사용한 경우 SQL에서 해당 엔티티의 기본 키값을 사용</p>
+<pre><code>SELECT COUNT(M.ID) FROM MEMBER M // 아이디사용
+SELECT COUNT(M) FROM MEMBER M // 엔티티 자체
+</code></pre>
+</li>
+</ul>
+<p>둘다 완전히 똑같음</p>
+<p>둘다 m.id로 날라감 엔티티라도 id 기본키값으로</p>
+<h2 id="네임드-쿼리">네임드 쿼리</h2>
+<ul>
+<li>미리 정의해서 이름을 부여해두고 사용하는 정적 쿼리</li>
+<li>앱 로딩시점에 쿼리를 검증하고 캐싱해둠 =&gt; 로딩시점에 문법오류를 잡아주는 장점!</li>
+</ul>
+<h2 id="벌크연산">벌크연산</h2>
+<ul>
+<li>
+<p>한번에 여러 SQL 쿼리를 날리는 방법 UPDATE DELETE INSERT</p>
+<pre><code>em.createQuery("UPDATE Product p SET p.price * 
+1.1 WHERE p.stockAmount &lt; : stockAmount;", 10).excuteUpdate();
+</code></pre>
+</li>
+<li>
+<p>영속성 컨텍스트를 무시하고 데이터베이스에 바로 직접 쿼리를 날리므로 벌크 연산을 먼저 실행하거나 벌크연산하고 영속성컨텍스트를 초기화할 것!</p>
+</li>
+<li>
+<p>생각해보면 당연한게 쿼리연산시 쿼리 이전에 영속성컨텍스트를 플러시하고 이후 쿼리가 날라가면 영속성컨텍스트안에있는 엔티티들은 갱신이 안되있음</p>
+</li>
+</ul>
 
