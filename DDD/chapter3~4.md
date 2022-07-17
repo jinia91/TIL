@@ -89,3 +89,6 @@ DDD의 저작 시점이 2000년대 초반이고, 당시는 스프링이 나오�
 
 에릭 에반스가 최근에(15") 포스팅한 DDD에 대한 아티클도 같이 읽어봐야겠다.
 - https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf
+
+리액티브 선언문(14")
+- https://www.reactivemanifesto.org/ko
