@@ -92,3 +92,6 @@ DDD의 저작 시점이 2000년대 초반이고, 당시는 스프링이 나오�
 
 리액티브 선언문(14")
 - https://www.reactivemanifesto.org/ko
+
+Heroku's twelve factor
+- https://12factor.net/ko/
