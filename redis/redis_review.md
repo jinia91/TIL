@@ -1,4 +1,3 @@
-> https://www.youtube.com/watch?v=mPB2CZiAkKM 정리
 
 # redis 소개
 - in-memory data structure store
@@ -53,15 +52,18 @@
 
 # collection supported by redis
 - strings
- 일반적인 키밸류
- 
+ 일반적인 키밸류 
 - list
  일반적인 array 데이터 조회가 빠르고, 중간에 데이터 삽입시 성능문제
  스택구조나 리스트 구조를 사용한다고 생각하면되고 lpush rpush 혹은 lpop rpop으로 데이터 insert
 - set
   중복값 x
+  sadd key value를 넣을때 value가 이미 존재한다면, 추가되지않음
 - sorted set
   정렬된 set
+  redis쓸때 많이쓰게됨
+  zadd key score value 로 insert하고 value가 이미 있으면 score에 기록
+  - score 값이 double 타입인데 js는 54비트 이상의 큰수를 표현시 근사치로 표현하면서 정확한 값이 표기안되는 문제가 있는데, 웹 통신간 문제가 발생할 여기가 있음
 - hash
  
 
@@ -73,4 +75,8 @@
 - 확률적 자료구조
   - hyperloglog
 - redis Module
+
+# reference
+- https://www.youtube.com/watch?v=mPB2CZiAkKM
+
 
