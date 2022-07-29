@@ -121,6 +121,104 @@
   - 10만개 데이터를 매번 가져온다고 생각하면 매우 느림
   - 다 가져와야하는상황이 있을경우 쪼개서 가져올것 자체적으로 페이징처리을 하려고해보자
 
+# Replication
+- Async Replication
+  - Replication Lag 이 발생 가능(마스터엔 있는데 slave엔 데이터가 없는 상황, 클러스터기반 aws rds사용하는 실무에서 실제로 겪어봄)
+- Replicaof(>=5.0) or 'slaveof' 명령으로 설정가능
+  - Replicaof hostname port
+- DBMS로 보면 statement replication 가 유사
+## Replication 설정 과정
+  - secondary에 replicaof or slaveof 명령 전달
+  - secondary는 PRIMARY에 sync 명령 전달
+  - primary는 현재 메모리 상태를 저장하기 위해
+    - fork(만악의 근원)
+  - fork한 프로세서는 현재 메모리 정보를 disk에 dump
+  - 해당 정보를 secondary에 전달
+  - fork 이후의 데이터를 secondary에 계속 전달
+
+## 주의할 점
+- fork가 발생하며 이는 현재 사용하는 메모리의 1.5~2배까지 점유율이 늘어날수있음을 감안해야함
+- 엘라스틱캐시 redis는 fork없이 replication 가능할수 있음! doc 제대로 볼것
+- 많은 대수의 redis 서버가 replica를 두고있다면 네트웍 이슈나 사람의 작업으로 동시에 replication이 재시도 되도록 하면 문제가 발생할수 있음
+
+# redis 권장 설정!
+- Maxclient 설정 50000
+- RDB/AOF 설정 off
+- 특정 commands disable
+  - keys
+  - aws의 elastic cache는 이미 하고 있음
+- 전체 장애의 90% 이상이 keys와 save 설정때문
+  - 적절한 ziplist 설정 필요
+
+# Redis 데이터 분산
+## 데이터 분산 방법
+- app에서 분산
+- redis cluster
+## consistence hashing
+redis에 고유 해시코드를 지정하고 index 해시코드의 근사치값들을 저장시키는 전략으로 rebalancing이 최소화할수 있음
+
+# sharding
+> 데이터를 어떻게 나눌것인가? 데이터를 어떻게 찾을것인가?
+
+## Range
+- 그냥 특정 범위만큼 쪼개기
+- 서버에 부담이 불규칙하게 분배됨
+
+## MODULAR
+- N % K 로 서버의 데이터를 결정
+- Range보다 데이터를 균등하게 분배할 가능성이 높음
+
+## Indexed 서버
+- 일종의 티켓서버를 두고 균등하게 redis서버에 데이터 분배
+- SPOF
+
+# Redis Cluster
+- 장점
+  - 자체적인 Pri, sec, failover
+  - slot 단위 의 데이터 관리
+- 단점
+  - 메모리사용량이 더 많음
+  - 마이그레이션 자체는 관리자가 시점을 결정해야함
+  - library 구현이 필요
+
+# Redis Failover
+## Coordinator 기반
+- zookeeper, etcd, consul 등의 Coordinator 사용
+- 헬스체크로 current redis 저장
+
+## VIP 기반
+
+가상 ip기반으로 접속중 헬스 체크로 확인해서 장애시 secondary를 primary로 승격시키고 vip를 secondary에 할당(라우팅)
+
+## DNS 기반
+
+vip와 동일한 방식, 도메인변경
+
+결론적으로 vip,dns 모두 클러스터 엔드포인트를 본다고 생각하면 편함
+
+# Monitoring Factor
+
+- Redis Info 통한 정보
+ - RSS(물리메모리 사용량! 무조건 모니터링!)
+ - Used Memory(redis가 생각하는 메모리사용량)
+ - Connection 수(커넥션 맺고 끊기를 자주하면 성능 문제가 있음!, 잦은 커넥션 생성 종료로직은 안좋다)
+ - tps 수치(cpu에 부담)
+## CPU 100%칠경우
+- 처리량이 매우많다면? 스케일업
+- o(n) 명령이 많은경우
+  - 패턴을 파악하여 전략적으로 명령을 수정하던지 
+
+
+- System
+  - CPU
+  - Disk
+  - Network rx/tx 
+
+# 결론
+- 기본적으로 redis는 좋지만, 메모리를 빡빡하게 쓸경우 관리가 어려음
+- write가 heavy할때는 특히 요주의
+
+
 # 추가로 더 알아보기
 - redis Persistence(RDB, AOF)
 - redis Pub/Sub
