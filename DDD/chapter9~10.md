@@ -189,3 +189,8 @@ https://enterprisecraftsmanship.com/posts/specification-pattern-always-valid-dom
 - 인자의 타입과 반환타입을 동일하게 하는 닫힌 연산 인터페이스구현은 해당 타입의 인스턴스 집합에 닫혀있는 고수준 인터페이스를 제공할 수 있다.
 - 다만 이 방식은 VO의 로직에만 담도록하자
 - Entity가 Entity를 연산으로 반환하는것은 일반적이진 않은 케이스
+
+
+## 선언적 설계(추가 예정)
+- specification 선언적 형식으로 확장해보기 예제 실습
+- 지분계산 예시를 통해 유연한 설계해보기 예제 실습
