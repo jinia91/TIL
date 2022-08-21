@@ -106,3 +106,86 @@ https://enterprisecraftsmanship.com/posts/specification-pattern-always-valid-dom
 - 객체 생성시 `Always-valid-domain-model`에 해당하는 기본 validate는 객체의 abstract Specification의 validate에 존재하고 추가적으로 상속에 따라 템플릿패턴으로 구현하거나 데코레이터 패턴을 사용햇 validate를 추가하는 식으로 구현하면 될거같다.
 - 또한 select은 굳이 필요한지 의문이들기도함
 - 오히려 명세를 엔티티에 컬럼화하여 타입으로 조회하도록하면 보다 쉽지않을까 생각됨
+
+# chapter 10. 유연한 설계
+- 복잡하게 동작하는 소프트웨어에 좋은 설계가 걸여되면 리팩터링, 코드 결합이 점점 더 어려워짐
+- 설계 요소가 모놀리식(모놀리스 아키텍처 의미x, DDD와 같이 도메인별 분리가 되어있지 않음을 의미)하게 구현되어있을경우 중복코드 양산의 위험성, 재사용과 코드 추적이 어려워짐 => 취약성
+- 레거시 코드에 대한 중압감에 시달리지 않고 프로젝트 진행을 촉진하려면 변경을 수용하고 즐겁게 작업할수 있는 설계, 즉 `유연한 설계`가 필요
+- chapter 9를 통해 묵시점 개념들을 심층 모델링화 하는데 성공했다면, 반복주기를 거쳐 핵심 관심사를 단순하고도 명확하게 표현하는 모델을 개발하고, 클라이언트 개발자가 모델을 실제 작동 가능한 코드로 만들어 낼수 있는 설계를 구현할 필요
+
+![image](https://user-images.githubusercontent.com/85499582/185791905-83870ebf-ebd6-4750-b128-df288436a552.png)
+
+## Intention-revealing interface(`의도를 드러내는 인터페이스`)
+
+- 클라이언트 개발자는 기본적으로 설계된 도메인로직을 어플리케이션 계층의 조력객체들과 연동시키거나, 다른 도메인로직들과 결합시켜 보다 유즈케이스에 가까운 로직을 작성하는 역할
+- 만약 클라이언트 개발자가 객체를 효과적으로 사용하는데 알아야할 정보를 인터페이스로부터 얻지 못한다면, 결국 세부적으로 코드를 파악해야하고, 이는 개발 생산성의 저하로 이어짐
+- 도메인 내에 존재하는 개념을 클래스나 메서드의 형태로 명확하게 모델링하여 가치를 얻으려면 해당 도메인 개념을 반영하도록 크래스와 메서등의 이름을 지어야함!
+
+> Kent Beck은 메서드의 목적을 효과적으로 전달하고자 `Intention-Revealing Selector` 를 사용해 메서드의 이름을 짓는 것을 주장
+
+- 타입이름, 메서드 이름, 인자이름 셋이 조합되어 의도를 드러내는 인터페이스를 작성하는데 심혈을 기울이자
+- 이때 이 이름들은 유비쿼터스 언어로 작성하며, 클라이언트 개발자의 관점에서 코드를 작성하기위해 BDD Test 코드로 명세를 만들면 보다 좋다.(켄트백 TDD)
+
+
+## Side-Effect-Free-Function(`부수효과가 없는 함수`)
+- 함수가 함수를 호출하고 그 함수가 다른함수를 또 호출하는식으로 무질서하게 중첩되면, 클라이언트 개발자가 의도하지 않았음에도 depth에 의해 부수효과가 발생할 확률이 높음
+- 함수(`function`)은 부수효과를 동반하지 않기떄문에 함수라 부름
+  - 중첩된 깊이를 걱정하지 않고도 다른함수를 호출홰야하며, 테스트하기도  쉬워야함
+
+### 원칙
+#### 명령과 질의(Command와 Query를 분리 - `CQS`)
+- Command는 도메인 데이터를 반환하지 않아야하고, 가능한 한 단순하게 유지해야함
+#### 연산의 결과를 표현하는 새로운 VO를 생성하여 반환하는 기법으로 생명주기에대한 걱정에서 멀어지기
+- 만약 특정 command가 객체 필드의 특정 그룹들을 변화시킨다면, 해당 그룹들을 VO로 만들수 있는지, 그리고 VO에 책임을 할당할수 있는지 고민해보자
+  
+  
+      public class Paint {
+          private double volume;
+          private int red;
+          private int yellow;
+          private int blue;
+    
+          public void mixIn(Paint otherPaint){
+           ...
+          }
+      }
+      // 위와같은 설계보단 아래와같이 VO의 로직으로 책임을 분리하여 새로운 VO가 반환케함으로서, 결론적으로 VO에 로직이 담겨 사이드 이펙트의 고민에서 떨어질 수 있게됨
+      public class Paint {
+          private double volume;
+          private Color color;
+    
+          static public class Color{
+             private int red;
+             private int yellow;
+             private int blue;
+    
+             public Color mixedWith(Color otherPaintColor, double ratio){
+               ...
+             }
+          }
+          public void mixIn(Paint otherPaint){
+           ...
+           double ratio = otherPaint.getVolume() / this.volume;
+           this.color = this.color.mixedWith(otherPaint.getColor(), ratio);
+          }
+          
+      }
+
+> 변화할수없는 불변객체, VO에 책임을 할당함으로서, 변화로 인한 사이드이펙트의 가능성을 제거하여 훨씬 안전한 로직이 구현가능함이 핵심
+
+## Assertion(`검증`)
+- 테스트코드 작성시 Assertion으로 뭘 검증해야하는지 고민되는경우가 많다
+- 연산의 사후 조건과 클래스 및 Aggregate의 불변식을 Assertion으로 검증해라!
+
+## Conceptual Contour(`개념적 윤곽`)
+- 설계요소를 응직력있는 단위로 분해하기
+- 계속적인 리팩토링을 거쳐 변경되는 부분과 변경되지 않는 부분을 크게 나누고, 변경을 분리하기위한 패턴을 명확하게 표현하는 개념적 윤곽을 찾기
+
+## StandAlone Class(독립형 클래스)
+- high cohesion, low coupling을 명심하자
+- 낮은 결합도는 인지부하를 낮춘다
+
+## Closure of Operation(연산의 닫힘)
+- 인자의 타입과 반환타입을 동일하게 하는 닫힌 연산 인터페이스구현은 해당 타입의 인스턴스 집합에 닫혀있는 고수준 인터페이스를 제공할 수 있다.
+- 다만 이 방식은 VO의 로직에만 담도록하자
+- Entity가 Entity를 연산으로 반환하는것은 일반적이진 않은 케이스
