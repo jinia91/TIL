@@ -13,7 +13,7 @@
 
 ### sort(List list), sort(List list, Comparator)
 
-- ps에서 자주쓰는 정렬알고리즘으로 내부적으로 merge-sort로 이루어짐
+- ps에서 자주쓰는 정렬메서드로 내부적으로 merge-sort로 이루어짐
 - 첨언으로 primitive 타입을 사용하는 Arrays.sort() 배열 정렬의경우 내부 알고리즘으로 퀵정렬을 사용하는데 퀵정렬은 시간복잡도가 일반적으론 O(nlogN)이나 최대 O(n^2)까지 증대될수 있으므로 merge-sort에 비해 최악의 경우 정렬이 느려짐
 
 ### binarySearch(List list, T key),  indexedBinarySearch(List<? extends Comparable<? super T>> list, T key) 
