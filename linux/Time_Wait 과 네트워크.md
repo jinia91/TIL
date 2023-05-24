@@ -80,11 +80,18 @@
 
 1. 왜 FIN이 아니라 FIN ACK을 보내지?(10번라인)
 
-소켓클로즈시 유실 패킷이 있는지 없는지 알리는차원에서 마지막 ACK의 ack=number를 다시한번 FIN과 함께 보내는 half-close 전략이기 때문!
+소켓클로즈시 유실 패킷이 있는지 없는지 알리는차원에서 마지막 ACK의 ack=number를 다시한번 FIN과 함께 보내는 전략으로 half close를 방지하려하기때문
+
+<img width="681" alt="image" src="https://github.com/jinia91/TIL/assets/85499582/2239913d-9f82-4241-926f-92eb640fb32c">
+
+
 
 2. 3way인데? (2way, 3way 가 한번에 날라감, 11번라인)
 
 성능상의 이유로 실제로 이렇게 구현된 경우가 많다고함
+
+<img width="1011" alt="image" src="https://github.com/jinia91/TIL/assets/85499582/ff9c5e19-48ab-4fe2-8a62-099efd3fe23f">
+
 
 # TIME_WAIT 소켓의 문제점
 
