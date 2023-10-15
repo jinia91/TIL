@@ -24,4 +24,32 @@
 
 ### 정책 구조
 - json
-- version, id, statement(sid, effect(Allow, Deny), principal, action, resource, condition) 으로 구성됨
+  version, id, statement(sid, effect(Allow, Deny), principal, action, resource, condition) 으로 구성됨
+
+|||
+|-|-|
+|Version|policy language version|
+|id|policy id|
+|Statement|사실상의 정책|
+
+- statement 구조
+|sid|id|
+|effect|Enum allow, deny|
+|principal|어디에 적용할지?|
+|Action| 허용/거절 행위들 목록 |
+|Resource|어떤 리소스일지|
+
+## MFA - Multi Factor Authentication
+
+> aws는 유저의 비밀번호 정책을 다양하게 커스텀 가능, 그중에서도 아주 강력한 정책이 MFA
+
+- virtual MFA device
+- U2F Security Key
+- Hardware key
+
+  == otp 같은거
+
+<img width="1142" alt="image" src="https://github.com/jinia91/TIL/assets/85499582/0b3a811a-e1d5-4eb5-a22e-98a988f85dd3">
+
+  
+
