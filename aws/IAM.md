@@ -39,7 +39,13 @@
 |Action| 허용/거절 행위들 목록 |
 |Resource|어떤 리소스일지|
 
-## MFA - Multi Factor Authentication
+## IAM 보안 도구
+
+- Iam Credential Report
+- Iam Access Advisor
+
+
+### MFA - Multi Factor Authentication
 
 > aws는 유저의 비밀번호 정책을 다양하게 커스텀 가능, 그중에서도 아주 강력한 정책이 MFA
 
@@ -53,3 +59,18 @@
 
   
 
+## IAM Role(역할)
+
+유저에게 특정 행위, 정책을 할수 있도록 부여하는것처럼, aws내의 특정 서비스도 다른 서비스를 사용할수 있는지에 대한 권한을 부여받아야한다.
+
+이때 부여되는 개념
+
+
+
+# Best Practice
+
+- 루트계정은 사용하는것이 아니다
+- 물리적인 유저 한명당 유저 하나, 공유 x
+- 그룹레벨로 권한관리
+- 인증은  MFA 사용 강하게
+- 자격증병 보고서와 access advisor로 권한 감시
