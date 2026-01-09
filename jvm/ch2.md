@@ -91,6 +91,10 @@ Xmx
 
 <img width="801" height="426" alt="image" src="https://github.com/user-attachments/assets/cefc4623-a47c-493d-9d2f-1ee241cd5a70" />
 
+### compressed oop
+
+https://xephysis.tistory.com/6
+
 ### 객체 헤더
 - 32비트 가상머신에선 32비트, 64비트에선 64비트 크기
 - 객체 해시코드, 객체 세대 나이, 락 플래그
